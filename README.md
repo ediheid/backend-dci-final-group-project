@@ -1,0 +1,2 @@
+Server side of the final group project for one year intensive web development training at the Digital Career Institute.
+Project owners @katharinadobiosch @JanHapple @lopez-marc @giuseppefalcidia and myself @ediheid
