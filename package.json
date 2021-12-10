@@ -1,0 +1,23 @@
+{
+  "name": "backend-dci-final-group-project",
+  "version": "1.0.0",
+  "description": "Server side of the final group project for one year intensive web development training at the Digital Career Institute. Project owners @katharinadobiosch @JanHapple @lopez-marc @giuseppefalcidia and myself @ediheid",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ediheid/backend-dci-final-group-project.git"
+  },
+  "keywords": [],
+  "author": "Marc Lopez Torrent <marclopeztorrent@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ediheid/backend-dci-final-group-project/issues"
+  },
+  "homepage": "https://github.com/ediheid/backend-dci-final-group-project#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
