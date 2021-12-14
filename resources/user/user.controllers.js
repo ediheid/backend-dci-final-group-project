@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import User from models
 // import Token from models
 import bcrypt from "bcrypt";
@@ -122,3 +123,6 @@ export const userLogin = async (req, res, next) => {
     }
     
 }
+=======
+import { User } from './user.model'
+>>>>>>> 14ebb0d866ae5d6f0cb05f3f6b000af53e05d1f0
