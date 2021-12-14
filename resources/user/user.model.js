@@ -1,18 +1,18 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        // required: true
     },
     password: {
         type: String,
-        required: true
+        // required: true
     },
     email: {
         type: String,
-        required: true,
-        unique: true
+        // required: true,
+        // unique: true
     },
     address: {
         street: String,
@@ -22,16 +22,19 @@ const userSchema = new mongoose.Schema({
     },
     birthday: {
         type: Date,
-        required: true
+        // required: true
     },
     locations: {
-        type: [Schema.Types.ObjectId],
+        type: [mongoose.SchemaTypes.ObjectId],
         ref: 'Location'
     },
     bookings: {
-        type: [Schema.Types.ObjectId],
+        type: [mongoose.SchemaTypes.ObjectId],
         ref: 'Booking'
-    }
+    },
+    verification: {
+        type: Boolean, default: false
+    } 
     //TODO Add reviews when we reach that feature
     //TODO Add wishlist when we reach that feature
 
