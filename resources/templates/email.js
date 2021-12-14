@@ -1,8 +1,11 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-const template = (userId) => `<h1>Test<h1/>
-<a href="${process.env.HOST_URL + '/user/verify-email/' + userId}">Please click here to verify your email</a>`
+const emailTemplate = (userId, firstname, verificationToken) => `<h1>Please verify your email<h1/>
+<p>Hey ${firstname},</p>
+<p>you have just created a new User-Account at FreshBnB. Please verify your account by clicking the following link:</p>
+<a href="${process.env.HOST_URL + '/user/verify-email/' + userId + '/' + verificationToken}">Please click here to verify your email</a>
 
+<p>If you haven't created this account, please delete this email and don't click on the above link.</p>`
 
-export default template;
+export default emailTemplate;

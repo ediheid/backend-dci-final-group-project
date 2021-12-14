@@ -1,22 +1,20 @@
 import { User } from "./user.model.js";
-// import Token from models
+//? import Token from a created model
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import createErrors from "http-errors";
 import nodemailer from "nodemailer";
-import emailtemplate from "../templates/email.js";
+import emailTemplate from "../templates/email.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-console.log("Pass:",process.env.SERVICE)
 //* Create a new User on Signup Page
 export const createUser = async (req, res, next) => {
     // console.log(req.body)
     try {
         // Search if a user with this email already exists
-        // const existingUser = await User.findOne({ email: req.body.email })
-
-        const existingUser = false;
+        const existingUser = await User.findOne({ email: req.body.email })
+        //* const existingUser = false;
 
         console.log(existingUser)
         // If there is no user with the same email adress, create a new user
@@ -24,7 +22,9 @@ export const createUser = async (req, res, next) => {
             // check if given password is identical to the confirmPassword
             if (req.body.password === req.body.confirmedPassword) {
                 // create hashed password for backend
-                let securePassword = await bcrypt.hash(req.body.password, 12);
+                const securePassword = await bcrypt.hash(req.body.password, 12);
+
+                const verificationToken = crypto.randomBytes(16).toString("hex");
 
                 //TODO: Do we have to create a password here? It's better to send the user a temporary password with email confirmation and than change it in the account dashboard???
                 // build up new User
@@ -32,18 +32,11 @@ export const createUser = async (req, res, next) => {
                 email: req.body.email,
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
-                password: securePassword
+                password: securePassword,
+                verificationToken: verificationToken
             })
                 // save User into database
                 await newUser.save()
-
-            // let token;
-
-            //     try {
-            //         token = new Token({ userId : userLogin._id, token : crypto.randomBytes(16).toString("hex") })    
-            //     } catch (e) {
-            //         return next(createErrors(401, "Signup failed - please try again."))
-            //     }
             
             //* Send varification mail
             const transporter = nodemailer.createTransport({ 
@@ -64,18 +57,15 @@ export const createUser = async (req, res, next) => {
                 from: process.env.NODEMAILER_USER,
                 //TODO: Implement Info from Frontend
                 to: req.body.email,     
-                subject: "Account verification Link",
+                subject: "Please verify your email for FreshBnB",
                 //TODO: Implement firstname and from Frontend
                 // text: `Hello,
                 // Please verify your account!`
-                html: emailtemplate(newUser._id)
+                html: emailTemplate(newUser._id, req.body.firstname, verificationToken)
             }
             
                 await transporter.sendMail(mailOptions)
             
-    
-                
-
                 // respond with message to successful created User
                 res.status(201).json({message: "Your new Account has been created! Please check your email to verify your account!"})
                 
@@ -95,17 +85,41 @@ export const createUser = async (req, res, next) => {
     }
 }
 
-//*============================================================================================================================================
+//* ========================================================
 
 export const verifyUser = async (req, res, next) => {
     console.log("User verified the email!", req.params.userId)
-    const existingUser = await User.findOne
+    try {
+        const existingToken = await User.findOne({ verificationToken: req.params.token})
 
-    res.redirect(process.env.FRONTEND_URL + "?message=Your account has been verified")
+        if (!existingToken) {
+            //TODO: Expire token in createUser-Function + redirect to landing Page for resending Verification
+            
+            next(createErrors(400, "Your verification link may have expired. Please click on resend your verification"))
+        } else {
+            const existingUser = await User.findOne({ _id: req.params.userId })
 
+            if (!existingUser) {
+                next(createErrors(401, "We were unable to find a user for this verification. Please SignUp!"))
+            } else if (existingUser.verified) {
+                next(createErrors(200, "User has already been verified. Please login!"))
+            } else {
+                existingUser.verified = true;
+                await existingUser.save()
+                
+
+                // res.redirect(process.env.FRONTEND_URL + "?message=Your account has been verified")
+
+                res.status(201).json({ message: "Your account has been successfully activated!" })
+            }
+        }
+
+    } catch (e) {
+        next(createErrors.InternalServerError())
+    }
 }
 
-//*========================================================
+//* ========================================================
 
 export const userLogin = async (req, res, next) => {
     try {
