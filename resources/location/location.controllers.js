@@ -1,0 +1,1 @@
+import { Location } from './location.model'
