@@ -17,6 +17,6 @@ export const registerValidator = (props) => {
             .notEmpty().trim()
             .withMessage(`Password is required`)
             .isLength({ min: 8 })
-            .withMessage(`Email must be at least 8 characters long`)
+            .withMessage(`Password must be at least 8 characters long`)
     ]   
 }

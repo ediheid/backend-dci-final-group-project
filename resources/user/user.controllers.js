@@ -97,31 +97,37 @@ export const createUser = async (req, res, next) => {
 export const verifyUser = async (req, res, next) => {
     console.log("User verified the email!", req.params.userId)
     try {
-        const existingToken = await User.findOne({ verificationToken: req.params.token })
+        // const existingToken = await User.findOne({ verificationToken: req.params.token })
 
-        if (!existingToken) {
-            //TODO: Expire token in createUser-Function + redirect to landing Page for resending Verification
+        // if (!existingToken) {
+        //     //TODO: Expire token in createUser-Function + redirect to landing Page for resending Verification
             
-            next(createErrors(400, "Your verification link may have expired. Please click on resend your verification"))
-        } else {
+        //     // next(createErrors(400, "Your verification link may have expired. Please click on resend your verification"))
+
+        //     res.redirect(process.env.FRONTEND_URL + "/verify-email?message=Your verification link may have expired. Please click on resend your verification")
+
+        
+        // } else {
             const existingUser = await User.findOne({ _id: req.params.userId })
 
             if (!existingUser) {
-                next(createErrors(401, "We were unable to find a user for this verification. Please SignUp!"))
+                // next(createErrors(401, "We were unable to find a user for this verification. Please SignUp!"))
+
+                res.redirect(process.env.FRONTEND_URL + "/verify-email?message=We were unable to find a user for this verification. Please SignUp!")
             } else if (existingUser.verified) {
-                next(createErrors(200, "User has already been verified. Please login!"))
+                // next(createErrors(200, "User has already been verified. Please login!"))
+
+                res.redirect(process.env.FRONTEND_URL + "/verify-email?message=User has already been verified. Please login!")
         
             } else {
                 existingUser.verified = true;
                 existingUser.verificationToken = "";
                 await existingUser.save()
                 
-                // res.redirect(process.env.FRONTEND_URL + "?message=Your account has been verified")
+                res.redirect(process.env.FRONTEND_URL + "/verify-email?message=Your account has been successfully activated!")
 
-                res.status(201).json({ message: "Your account has been successfully activated!" })
+                // res.status(201).json({ message: "Your account has been successfully activated!" })
             }
-        }
-
     } catch (e) {
         next(createErrors.InternalServerError())
     }
