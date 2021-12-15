@@ -97,6 +97,8 @@ export const verifyUser = async (req, res, next) => {
             //TODO: Expire token in createUser-Function + redirect to landing Page for resending Verification
             
             next(createErrors(400, "Your verification link may have expired. Please click on resend your verification"))
+
+        
         } else {
             const existingUser = await User.findOne({ _id: req.params.userId })
 
@@ -110,9 +112,9 @@ export const verifyUser = async (req, res, next) => {
                 existingUser.verificationToken = "";
                 await existingUser.save()
                 
-                // res.redirect(process.env.FRONTEND_URL + "?message=Your account has been verified")
+                res.redirect(process.env.FRONTEND_URL + "?success=Your account has been verified")
 
-                res.status(201).json({ message: "Your account has been successfully activated!" })
+                // res.status(201).json({ message: "Your account has been successfully activated!" })
             }
         }
 
