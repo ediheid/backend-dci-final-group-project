@@ -6,6 +6,7 @@ import createErrors from "http-errors";
 import nodemailer from "nodemailer";
 import emailTemplate from "../templates/email.js";
 import dotenv from "dotenv";
+import crypto from "crypto";
 dotenv.config();
 
 //* Create a new User on Signup Page
@@ -14,7 +15,7 @@ export const createUser = async (req, res, next) => {
     try {
         // Search if a user with this email already exists
         const existingUser = await User.findOne({ email: req.body.email })
-        //* const existingUser = false;
+        // const existingUser = false;
 
         console.log(existingUser)
         // If there is no user with the same email adress, create a new user
@@ -80,8 +81,8 @@ export const createUser = async (req, res, next) => {
             next(createErrors(401, "User with the same email already exists. Please make sure you didn't already signup."))
         }
     } catch (e) {
-        // next(createErrors.InternalServerError())
-        console.error(e)
+        next(createErrors.InternalServerError())
+        // console.error(e)
     }
 }
 
@@ -90,7 +91,7 @@ export const createUser = async (req, res, next) => {
 export const verifyUser = async (req, res, next) => {
     console.log("User verified the email!", req.params.userId)
     try {
-        const existingToken = await User.findOne({ verificationToken: req.params.token})
+        const existingToken = await User.findOne({ verificationToken: req.params.token })
 
         if (!existingToken) {
             //TODO: Expire token in createUser-Function + redirect to landing Page for resending Verification
@@ -103,11 +104,12 @@ export const verifyUser = async (req, res, next) => {
                 next(createErrors(401, "We were unable to find a user for this verification. Please SignUp!"))
             } else if (existingUser.verified) {
                 next(createErrors(200, "User has already been verified. Please login!"))
+        
             } else {
                 existingUser.verified = true;
+                existingUser.verificationToken = "";
                 await existingUser.save()
                 
-
                 // res.redirect(process.env.FRONTEND_URL + "?message=Your account has been verified")
 
                 res.status(201).json({ message: "Your account has been successfully activated!" })
