@@ -186,8 +186,9 @@ export const updateUser = async (req, res) => {
 }
 
 export const deleteUser = async (req, res) => {
+    console.log(req.params.id)
     try {
-        const removed = await model.findOneAndRemove({
+        const removed = await User.findOneAndRemove({
           _id: req.params.id
         })
     
