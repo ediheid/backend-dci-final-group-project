@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import user from "./resources/user/user.router.js"
+import location from "./resources/location/location.router.js"
 import morgan from "morgan";
 
 import dotenv from "dotenv";
@@ -22,6 +23,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use("/user", user)
+app.use("/location",location)
 
 app.listen(process.env.PORT, () => {
     console.log("Server started on port", process.env.PORT)
