@@ -35,8 +35,14 @@ export const registerValidator = (props) => {
             .withMessage('Confirm password is required.')
             .isLength({min:8, max:16})
             .withMessage('Confirm password should be between 8 to 16 characters')
-            .matches('password')
-            .withMessage('Passwords should match.')
+            // .matches("password")
+            // .withMessage('Passwords should match.')
+            // .custom((value, { req }) => {
+            //     if (value !== req.body.password) {
+            //     throw new Error('Password Confirmation does not match password');
+            //     }
+            //     return true;
+            //     })
     ]   
 }
 
