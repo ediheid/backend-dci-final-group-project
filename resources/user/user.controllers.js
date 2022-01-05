@@ -45,6 +45,10 @@ export const createUser = async (req, res, next) => {
                 })
                     // save User into database
                     await newUser.save()
+
+                    const response = {
+                        message: "Your new Account has been created! Please check your email to verify your account!"
+                    }
                 
                 //* Send varification mail
                 const transporter = nodemailer.createTransport({ 
@@ -77,7 +81,11 @@ export const createUser = async (req, res, next) => {
                     // respond with message to successful created User
                     // res.status(201).json({message: "Your new Account has been created! Please check your email to verify your account!"})
                     
-                    res.redirect(process.env.FRONTEND_URL + "/user-signed-up?message=Your new Account has been created! Please check your email to verify your account!")
+
+                    // res.redirect(process.env.FRONTEND_URL + "/user-signed-up?message=Your new Account has been created! Please check your email to verify your account!")
+
+                    res.status(201).json(response);
+
                     // If password and passwordConfirm conflicts send response to the user 
                 } else {
                     next(createErrors(406, "Your given and confirmed passwords are missmatching. Please make sure you type in the exact same passwords!"))

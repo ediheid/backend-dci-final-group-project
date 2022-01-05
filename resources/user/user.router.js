@@ -12,4 +12,6 @@ router.post(
 router.post("/login", userLogin);
 router.get("/verify-email/:userId/:token", verifyUser);
 
+// router.get("/user-signed-up/")
+
 export default router;

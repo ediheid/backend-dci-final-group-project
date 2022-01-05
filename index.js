@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import user from "./resources/user/user.router.js"
 import morgan from "morgan";
+import { globalErrorHandler } from "./middleware/globalErrorHandler.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -22,6 +23,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use("/user", user)
+
+app.use(globalErrorHandler)
 
 app.listen(process.env.PORT, () => {
     console.log("Server started on port", process.env.PORT)
