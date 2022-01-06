@@ -185,3 +185,36 @@ export const userLogin = async (req, res, next) => {
     }
     
 }
+
+export const updateUser = async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate({_id: req.params.id}, req.body, {
+          new: true
+        })
+          .lean()
+          .exec()
+    
+        res.status(200).json({ data: user }) // ? use namedspace?
+      } catch (e) {
+        console.error(e)
+        res.status(400).end() // TODO create error
+      }
+}
+
+export const deleteUser = async (req, res) => {
+    console.log(req.params.id)
+    try {
+        const removed = await User.findOneAndRemove({
+          _id: req.params.id
+        })
+    
+        if (!removed) {
+          return res.status(400).end()
+        }
+    
+        return res.status(200).json({ data: removed })
+      } catch (e) {
+        console.error(e)
+        res.status(400).end() // TODO create error
+      }
+}
