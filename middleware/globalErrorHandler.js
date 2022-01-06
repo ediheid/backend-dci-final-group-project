@@ -4,7 +4,7 @@ export const globalErrorHandler = (err, req, res, next) => {
     }
 
     // Log the error
-    console.log(err);
+    console.log("Global error handler", err);
 
     // Give the received error a status code and/or message if it doesn't already have one/both
     if (!err.statusCode) err.statusCode = 500;

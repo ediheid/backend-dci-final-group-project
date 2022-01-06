@@ -45,6 +45,10 @@ export const createUser = async (req, res, next) => {
                 })
                     // save User into database
                     await newUser.save()
+
+                    const response = {
+                        message: "Your new Account has been created! Please check your email to verify your account!"
+                    }
                 
                 //* Send varification mail
                 const transporter = nodemailer.createTransport({ 
@@ -75,8 +79,13 @@ export const createUser = async (req, res, next) => {
                     await transporter.sendMail(mailOptions)
                 
                     // respond with message to successful created User
-                    res.status(201).json({message: "Your new Account has been created! Please check your email to verify your account!"})
+                    // res.status(201).json({message: "Your new Account has been created! Please check your email to verify your account!"})
                     
+
+                    // res.redirect(process.env.FRONTEND_URL + "/user-signed-up?message=Your new Account has been created! Please check your email to verify your account!")
+
+                    res.status(201).json(response);
+
                     // If password and passwordConfirm conflicts send response to the user 
                 } else {
                     next(createErrors(406, "Your given and confirmed passwords are missmatching. Please make sure you type in the exact same passwords!"))
@@ -110,6 +119,8 @@ export const verifyUser = async (req, res, next) => {
         // } else {
             const existingUser = await User.findOne({ _id: req.params.userId })
 
+            // const existingToken = await User.findOne({ verificationToken: req.params.token })
+
             if (!existingUser) {
                 // next(createErrors(401, "We were unable to find a user for this verification. Please SignUp!"))
 
@@ -136,9 +147,12 @@ export const verifyUser = async (req, res, next) => {
 //* ========================================================
 
 export const userLogin = async (req, res, next) => {
+    // console.log("test")
     try {
-        const existingUser = await userLogin.findOne({email: req.body.email})
+        console.log("!!!", req.body)
+        const existingUser = await User.findOne({email: req.body.email})
 
+        console.log("!", existingUser)
         if(!existingUser) {
             next(createErrors(401, "User doesn't exist"))
         } else {
@@ -162,6 +176,8 @@ export const userLogin = async (req, res, next) => {
                 res.cookie("sessionCookie", token, { httpOnly: true, sameSite: "Strict" });
 
                 res.json(response);
+            } else {
+                next(createErrors(401, "Wrong password!"))
             }
         }
     } catch (e) {
