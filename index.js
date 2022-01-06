@@ -25,6 +25,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use("/user", user)
 app.use("/location",location)
+app.use(globalErrorHandler);
 
 app.use(globalErrorHandler)
 
