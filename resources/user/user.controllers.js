@@ -154,23 +154,24 @@ export const userLogin = async (req, res, next) => {
                     return next(createErrors(401, "Signup failed - please try again."))
                 }
 
-                if (!existingUser.locations && !existingUser.bookings) {
-                    existingUser.location = [];
-                    existingUser.bookings = [];
-                } else if (!existingUser.bookings) {
-                    e
-                }
+                // if (!existingUser.locations && !existingUser.bookings) {
+                //     existingUser.location = [];
+                //     existingUser.bookings = [];
+                // } else if (!existingUser.bookings) {
+                //     e
+                // }
 
                 const response = {
                     _id: existingUser._id,
                     firstname: existingUser.firstname,
                     lastname: existingUser.lastname,
                     locations: existingUser.locations,
-                    bookings: existingUser.bookings
+                    bookings: existingUser.bookings, 
+                    token:token
                 }
 
-                res.cookie("sessionCookie", token, { httpOnly: true, sameSite: "Strict" });
-
+                // res.cookie("token", "testCookie");
+                console.log("cookie send!", token)
                 res.json(response);
             }
         }
