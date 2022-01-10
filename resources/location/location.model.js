@@ -2,11 +2,11 @@ import mongoose from 'mongoose'
 import { geocoder } from '../../middleware/geocoder.js'
 
 const locationSchema = new mongoose.Schema({
-    // name: { 
-    //     type: String,
-    //     required: true,
-    //     unique: true 
-    // },
+    name: { 
+        type: String,
+        required: true,
+        unique: true 
+    },
     // description: { 
     //     type: String,
     //     required: true
@@ -35,6 +35,7 @@ const locationSchema = new mongoose.Schema({
       },
       formattedAddress: String
     },
+    id: String
     // bookings: {
     //     type: [mongoose.SchemaTypes.ObjectId],
     //     ref: 'Booking'
