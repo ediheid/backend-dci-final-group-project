@@ -137,7 +137,7 @@ export const verifyUser = async (req, res, next) => {
 
 export const userLogin = async (req, res, next) => {
     try {
-        const existingUser = await userLogin.findOne({email: req.body.email}) //! userLogin?
+        const existingUser = await User.findOne({email: req.body.email})
 
         if(!existingUser) {
             next(createErrors(401, "User doesn't exist"))
