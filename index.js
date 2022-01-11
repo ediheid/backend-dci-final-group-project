@@ -7,6 +7,7 @@ import location from "./resources/location/location.router.js"
 import morgan from "morgan";
 import { globalErrorHandler } from "./middleware/globalErrorHandler.js";
 
+
 import dotenv from "dotenv";
 dotenv.config();
 
