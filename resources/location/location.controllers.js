@@ -3,20 +3,56 @@ import { Location } from './location.model.js'
 export const findAllLocations = async (req,res) => {
     //TODO
     // Find all, restrict by region?
+    try {
+
+      const locations = await Location.find({})
+
+      const returnedLocations = locations.map(item => {
+        let location = {
+          id: item.id,
+          title: item.name,
+          type: "point",
+          address: item.location.formattedAddress,
+          coordinates: item.location.coordinates          
+          // img: item.propertyType,
+          // link: item.bookings
+        }
+        return location;
+      }
+      )
+
+      console.log(returnedLocations)
+      res.send({returnedLocations})
+
+    } catch (e) {
+      console.error(e)
+      res.status(400).end() // TODO create error
+    }
 }
 
 export const findLocation = async (req,res) => {
     //TODO
     //find by address?
+    try {
+      const location = await User.findOne({  }) // TODO what parameters
+    } catch (e) {
+      console.error(e)
+      res.status(400).end() // TODO create error
+    }
 }
 
 export const createLocation = async (req,res) => {
     //TODO
     // what fields cant be duplicate?
-    
       try {
-        const location = await Location.create(req.body);
+        const requestLocation = {
+          name: req.body.name,
+          address: req.body.address,
+          id: req.file.filename.split(".")[0]
+        }
+        const location = await Location.create(requestLocation);
     
+
         return res.status(201).json({
           success: true,
           data: location
