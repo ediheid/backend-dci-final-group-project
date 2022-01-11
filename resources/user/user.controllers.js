@@ -149,7 +149,7 @@ export const userLogin = async (req, res, next) => {
                 
                 try {
                     //TODO: lookup expires with logout!!!
-                    token = jwt.sign({ userId: existingUser.id }, "XfreshcampingkeyX", { expiresIn: "1h" }) 
+                    token = jwt.sign({ userId: existingUser.id, firstname: existingUser.firstname, lastname: existingUser.lastname }, "XfreshcampingkeyX", { expiresIn: "1h" }) 
                 } catch {
                     return next(createErrors(401, "Signup failed - please try again."))
                 }
