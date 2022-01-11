@@ -4,9 +4,9 @@ import { findManyBookings, findBooking, createBooking, updateBooking, deleteBook
 const router = Router()
 
 router.get('/', findManyBookings)
+router.post('/', createBooking)
 
 router.get('/:id', findBooking)
-router.post('/:id', createBooking)
 router.put('/:id', updateBooking)
 router.delete('/:id', deleteBooking)
 
