@@ -1,13 +1,81 @@
 import { Location } from './location.model.js'
+import { geocoder } from '../../middleware/geocoder.js'
+
+export const confirmLocation = async (req,res) => {
+  try {
+    const query = Object.values(req.body)
+
+    let coordinates
+
+    if (query.length !== 0) {
+      coordinates = await geocoder.geocode(query[0]);
+      console.log(coordinates)
+    } 
+  
+  const returnedLocation = {
+        // id: item.id,
+        title: "Your location",
+        type: "point",
+        address: coordinates[0].formattedAddress,
+        coordinates: [coordinates[0].longitude, coordinates[0].latitude]
+      }
+
+    console.log(returnedLocation)
+    res.send({returnedLocation})
+
+  } catch (e) {
+    console.error(e)
+    res.status(400).end() // TODO create error
+  }
+}
 
 export const findAllLocations = async (req,res) => {
     //TODO
-    // Find all, restrict by region?
+    // Find All?
     try {
+      const query = Object.values(req.body)
 
-      const locations = await Location.find({})
+      let locations, closestLocation
 
-      const returnedLocations = locations.map(item => {
+      if (query.length === 0) {
+        locations = await Location.find({})
+      } else {
+        console.log(query)
+        // TODO uncomment for the name of the property
+        // locations = await Location.find({name: {$regex: query[0]}})
+        
+        const coordinates = await geocoder.geocode(query[0]);
+        const range = 5
+        const queryLatitude = coordinates[0].latitude
+        const queryLongitude = coordinates[0].longitude
+        const minLat = queryLatitude - range
+        const maxLat = queryLatitude + range
+        const minLon = queryLongitude - range
+        const maxLon = queryLongitude + range
+        // console.log(coordinates)
+        // console.log("maxLon",maxLon)
+        // console.log("maxLat",maxLat)
+        locations = await Location.find({ $and: [
+          { "location.coordinates.0" : { $gte: minLon } },
+          { "location.coordinates.0" : { $lte: maxLon } },
+          { "location.coordinates.1" : { $gte: minLat } },
+          { "location.coordinates.1" : { $lte: maxLat } }
+        ]})
+        const closestLatitude = locations.reduce((prev, curr) => Math.abs(curr.location.coordinates[1] - queryLatitude) < Math.abs(prev.location.coordinates[1] - queryLatitude) ? curr : prev);
+        const closestLongitude = locations.reduce((prev, curr) => Math.abs(curr.location.coordinates[0] - queryLongitude) < Math.abs(prev.location.coordinates[0] - queryLongitude) ? curr : prev);
+
+        // console.log("closestLatitude",closestLatitude.id);
+        // console.log("closestLongitude",closestLongitude.id);
+        
+        if (closestLatitude.id === closestLongitude.id) {
+          closestLocation = closestLatitude
+        } else {
+          // TODO See smaller difference
+        }
+      } 
+    console.log(closestLocation) //TODO determine the center point to return it in the object
+
+    const returnedLocations = locations.map(item => {
         let location = {
           id: item.id,
           title: item.name,
@@ -22,7 +90,7 @@ export const findAllLocations = async (req,res) => {
       )
 
       console.log(returnedLocations)
-      res.send({returnedLocations})
+      res.send({returnedLocations,closestLocation})
 
     } catch (e) {
       console.error(e)
