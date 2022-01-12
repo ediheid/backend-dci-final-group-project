@@ -1,5 +1,6 @@
 import { Location } from './location.model.js'
 import { geocoder } from '../../middleware/geocoder.js'
+import GreatCircle from 'great-circle'
 
 export const confirmLocation = async (req,res) => {
   try {
@@ -52,29 +53,20 @@ export const findAllLocations = async (req,res) => {
         const maxLat = queryLatitude + range
         const minLon = queryLongitude - range
         const maxLon = queryLongitude + range
-        // console.log(coordinates)
-        // console.log("maxLon",maxLon)
-        // console.log("maxLat",maxLat)
+
         locations = await Location.find({ $and: [
           { "location.coordinates.0" : { $gte: minLon } },
           { "location.coordinates.0" : { $lte: maxLon } },
           { "location.coordinates.1" : { $gte: minLat } },
           { "location.coordinates.1" : { $lte: maxLat } }
         ]})
-        const closestLatitude = locations.reduce((prev, curr) => Math.abs(curr.location.coordinates[1] - queryLatitude) < Math.abs(prev.location.coordinates[1] - queryLatitude) ? curr : prev);
-        const closestLongitude = locations.reduce((prev, curr) => Math.abs(curr.location.coordinates[0] - queryLongitude) < Math.abs(prev.location.coordinates[0] - queryLongitude) ? curr : prev);
-
-        // console.log("closestLatitude",closestLatitude.id);
-        // console.log("closestLongitude",closestLongitude.id);
         
-        if (closestLatitude.id === closestLongitude.id) {
-          closestLocation = closestLatitude
-        } else {
-          // TODO See smaller difference
-        }
-      } 
-    console.log(closestLocation) //TODO determine the center point to return it in the object
 
+        closestLocation = locations.reduce((prev, curr) => GreatCircle.distance(curr.location.coordinates[1], curr.location.coordinates[0], queryLatitude, queryLongitude) < GreatCircle.distance(prev.location.coordinates[1], prev.location.coordinates[0], queryLatitude, queryLongitude) ? curr : prev);
+        
+        
+      }
+  
     const returnedLocations = locations.map(item => {
         let location = {
           id: item.id,
@@ -88,8 +80,10 @@ export const findAllLocations = async (req,res) => {
         return location;
       }
       )
-
-      console.log(returnedLocations)
+      // console.log("returnedLocations")
+      // console.log(returnedLocations)
+      // console.log("closestLocation") 
+      // console.log(closestLocation) 
       res.send({returnedLocations,closestLocation})
 
     } catch (e) {
