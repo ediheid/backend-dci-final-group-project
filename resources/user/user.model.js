@@ -19,23 +19,31 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     address: {
-        street: String,
-        number: Number,
-        city: String,
-        postcode: Number
+        street: { type: String },
+        number: { type: Number },
+        city: { type: String },
+        postcode: { type: Number }
     },
     birthday: {
         type: Date,
         // required: true
     },
-    locations: {
-        type: [mongoose.SchemaTypes.ObjectId],
-        ref: 'Location'
-    },
-    bookings: {
-        type: [mongoose.SchemaTypes.ObjectId],
-        ref: 'Booking'
-    },
+    locations: [
+        { 
+            type: mongoose.SchemaTypes.ObjectId,
+            required: true, 
+            ref: 'Location'
+        }
+    ],
+    
+    bookings: [
+        { 
+            type: mongoose.SchemaTypes.ObjectId,
+            required: true, 
+            ref: 'Bookings'
+        }
+    ],
+
     verified: {
         type: Boolean, 
         default: false

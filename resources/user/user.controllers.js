@@ -168,11 +168,9 @@ export const verifyUser = async (req, res, next) => {
 //* ========================================================
 
 export const userLogin = async (req, res, next) => {
-  // console.log("test")
   try {
     const existingUser = await User.findOne({ email: req.body.email });
 
-    console.log("!", existingUser);
     if (!existingUser) {
       next(createErrors(401, "User doesn't exist"));
     } else {
@@ -186,26 +184,38 @@ export const userLogin = async (req, res, next) => {
 
         try {
           //TODO: lookup expires with logout!!!
-          token = jwt.sign({ userId: existingUser.id }, "XfreshcampingkeyX", {
-            expiresIn: "1h",
-          });
+          token = jwt.sign(
+            {
+              userId: existingUser.id,
+              firstname: existingUser.firstname,
+              lastname: existingUser.lastname,
+            },
+            "XfreshcampingkeyX",
+            { expiresIn: "1h" }
+          );
         } catch {
           return next(createErrors(401, "Signup failed - please try again."));
         }
 
+        // if (!existingUser.locations && !existingUser.bookings) {
+        //     existingUser.location = [];
+        //     existingUser.bookings = [];
+        // } else if (!existingUser.bookings) {
+        //     e
+        // }
+
         const response = {
           _id: existingUser._id,
-          email: existingUser.email,
+          firstname: existingUser.firstname,
+          lastname: existingUser.lastname,
+          locations: existingUser.locations,
+          bookings: existingUser.bookings,
+          token: token,
         };
 
-        res.cookie("sessionCookie", token, {
-          httpOnly: true,
-          sameSite: "Strict",
-        });
-
+        // res.cookie("token", "testCookie");
+        console.log("cookie send!", token);
         res.json(response);
-      } else {
-        next(createErrors(401, "Wrong password!"));
       }
     }
   } catch (e) {
