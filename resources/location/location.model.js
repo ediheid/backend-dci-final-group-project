@@ -3,52 +3,62 @@ import { geocoder } from "../../middleware/geocoder.js";
 
 const locationSchema = new mongoose.Schema(
   {
-    name: {
+    title: { 
       type: String,
       required: true,
-      unique: true,
-    },
-    // description: {
-    //     type: String,
-    //     required: true
-    // },
-    // price: {
-    //     type: Number,
-    //     required:true
-    // },
-    // propertyType: {
-    //     type: String,
-    //     enum : ['user','admin'],
-    //     default: 'user'
-    // },
-    address: {
+      unique: true 
+  },
+  // description: { 
+  //     type: String,
+  //     required: true
+  // },
+  // price: {
+  //     type: Number,
+  //     required:true
+  // },
+  // propertyType: {
+  //     type: String,
+  //     enum : ['Field','Forest', 'Lake', 'River'],
+  //     default: ''
+  // },
+  spaceType: {
+    type: String,
+    // enum: ['An entire property','An shared property']
+    default: ''
+  },
+  host: {
+    type: String, 
+    // required: true, 
+  },
+  address: {
+    type: String,
+    required: [true, 'Please add an address']
+  },
+  location: {
+    type: {
       type: String,
-      required: [true, "Please add an address"],
+      enum: ['Point']
     },
-    location: {
-      type: {
-        type: String,
-        enum: ["Point"],
-      },
-      coordinates: {
-        type: [Number],
-        index: "2dsphere",
-      },
+    coordinates: {
+      type: [Number],
+      index: '2dsphere'
     },
-    id: String,
-    // bookings: {
-    //     type: [mongoose.SchemaTypes.ObjectId],
-    //     ref: 'Booking'
-    // },
-    // maxCapacity: {
-    //     type: Number,
-    //     required: true
-    // },
-    // amenities: {
-    //     type: String,
-    //     enum: ['Barrier-free','Lavatory', 'Showers', 'Electricity supply','Water supply','Animals welcome','Grey water disposal','Daily waste disposal','Basin','WiFi','Sauna','Whirlpool','Swimming pool','Washing machine', 'On a private path','In a courtyard','By a body of water','By a pond','By a river','On a field','In the woods','Outdoor seating area','Fireplace','Garden','Playground','Basic supplies available to purchase','Battery charging station']
-    // }
-    //TODO Add reviews when we reach that feature
+    formattedAddress: String
+  },
+  id: String
+  // bookings: {
+  //     type: [mongoose.SchemaTypes.ObjectId],
+  //     ref: 'Booking'
+  // },
+  // maxCapacity: {
+  //     type: Number,
+  //     required: true
+  // },
+  // amenities: {
+  //     type: String,
+  //     enum: ['Equipment','Barrier-free','Toilet','Electricity','Water connection','Shower','Animals allowed','Grey water disposal','Daily waste disposal','Sink','WLAN','Sauna','Whirlpool','Swimming pool','Washing machine','Surroundings','On a Wieder','On the edge of a field','On the edge of a forest','On a private path','In a courtyard','By a body of water','By a pond','By a river','In a field','In a wood','At a lake','Extras','Seating','Fireplace','Garden','Playground','Farm shop','Battery charging station']
+  // }
+  //TODO Add reviews when we reach that feature
   },
   { timestamps: true }
 );
