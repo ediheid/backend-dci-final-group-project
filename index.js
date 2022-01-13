@@ -29,6 +29,8 @@ app.use("/user", user)
 app.use("/location",location)
 app.use(globalErrorHandler);
 
+app.use(globalErrorHandler)
+
 app.listen(process.env.PORT, () => {
     console.log("Server started on port", process.env.PORT)
 })
