@@ -10,7 +10,6 @@ export const confirmLocation = async (req,res) => {
 
     if (query.length !== 0) {
       coordinates = await geocoder.geocode(query[0]);
-      console.log(coordinates)
     } 
   
   const returnedLocation = {
@@ -29,42 +28,49 @@ export const confirmLocation = async (req,res) => {
     res.status(400).end() // TODO create error
   }
 }
+//TODO Change All to Many
+export const findManyLocations = async (req,res) => {
 
-export const findAllLocations = async (req,res) => {
-    //TODO
-    // Find All?
     try {
-      const query = Object.values(req.body)
+      let query = Object.values(req.body)
 
-      let locations, closestLocation
+      let locations, closestLocation, locationByName
 
       if (query.length === 0) {
-        locations = await Location.find({})
+        locations = await Location.find({"formattedAddress": "Schwarzbald"})
+        console.log(locations)
       } else {
-        console.log(query)
-        // TODO uncomment for the name of the property
-        // locations = await Location.find({name: {$regex: query[0]}})
-        
-        const coordinates = await geocoder.geocode(query[0]);
-        const range = 5
-        const queryLatitude = coordinates[0].latitude
-        const queryLongitude = coordinates[0].longitude
-        const minLat = queryLatitude - range
-        const maxLat = queryLatitude + range
-        const minLon = queryLongitude - range
-        const maxLon = queryLongitude + range
+        query = Object.values(req.body)[0]
+        locationByName = await Location.find({name: {$regex: query}})
+        console.log(locations)
 
-        locations = await Location.find({ $and: [
-          { "location.coordinates.0" : { $gte: minLon } },
-          { "location.coordinates.0" : { $lte: maxLon } },
-          { "location.coordinates.1" : { $gte: minLat } },
-          { "location.coordinates.1" : { $lte: maxLat } }
-        ]})
-        
+        if (locationByName.length !== 0) {
+          query = locationByName[0].location.formattedAddress
+        }
 
+        
+          // TODO take out of the else to use in the empty query
+          const coordinates = await geocoder.geocode(query);
+          const range = 5
+          const queryLatitude = coordinates[0].latitude
+          const queryLongitude = coordinates[0].longitude
+          const minLat = queryLatitude - range
+          const maxLat = queryLatitude + range
+          const minLon = queryLongitude - range
+          const maxLon = queryLongitude + range
+
+          locations = await Location.find({ $and: [
+            { "location.coordinates.0" : { $gte: minLon } },
+            { "location.coordinates.0" : { $lte: maxLon } },
+            { "location.coordinates.1" : { $gte: minLat } },
+            { "location.coordinates.1" : { $lte: maxLat } }
+          ]})
+          
+
+          
+          
+        
         closestLocation = locations.reduce((prev, curr) => GreatCircle.distance(curr.location.coordinates[1], curr.location.coordinates[0], queryLatitude, queryLongitude) < GreatCircle.distance(prev.location.coordinates[1], prev.location.coordinates[0], queryLatitude, queryLongitude) ? curr : prev);
-        
-        
       }
   
     const returnedLocations = locations.map(item => {
@@ -80,10 +86,7 @@ export const findAllLocations = async (req,res) => {
         return location;
       }
       )
-      // console.log("returnedLocations")
-      // console.log(returnedLocations)
-      // console.log("closestLocation") 
-      // console.log(closestLocation) 
+
       res.send({returnedLocations,closestLocation})
 
     } catch (e) {
