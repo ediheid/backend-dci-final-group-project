@@ -5,7 +5,8 @@ import upload from '../../middleware/upload.js'
 const router = Router()
 
 router.get('/', findManyLocations)
-router.post('/', upload, createLocation)
+// router.post('/', upload, createLocation)
+router.post("/", createLocation)
 
 router.get('/confirm', confirmLocation)
 

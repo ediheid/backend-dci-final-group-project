@@ -3,54 +3,81 @@ import { geocoder } from "../../middleware/geocoder.js";
 
 const locationSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      unique: true,
+    host: {
+      type: [mongoose.SchemaTypes.ObjectId],
+      ref: 'User'
     },
-    // description: {
-    //     type: String,
-    //     required: true
-    // },
-    // price: {
-    //     type: Number,
-    //     required:true
-    // },
-    // propertyType: {
-    //     type: String,
-    //     enum : ['user','admin'],
-    //     default: 'user'
-    // },
+    propertyType: {
+      type: Array,
+      // enum : ['Field','Forest', 'Lake', 'River'],
+      default: []
+    },
+    spaceType: {
+      type: String,
+      required: true
+    },
+  //!ADDRESS ===============================================
     address: {
       type: String,
-      required: [true, "Please add an address"],
+      required: [true, 'Please add an address']
     },
     location: {
       type: {
         type: String,
-        enum: ["Point"],
+        enum: ['Point']
       },
       coordinates: {
         type: [Number],
-        index: "2dsphere",
+        index: '2dsphere'
       },
+      formattedAddress: String
     },
     id: String,
-    // bookings: {
-    //     type: [mongoose.SchemaTypes.ObjectId],
-    //     ref: 'Booking'
-    // },
-    // maxCapacity: {
-    //     type: Number,
-    //     required: true
-    // },
-    // amenities: {
-    //     type: String,
-    //     enum: ['Barrier-free','Lavatory', 'Showers', 'Electricity supply','Water supply','Animals welcome','Grey water disposal','Daily waste disposal','Basin','WiFi','Sauna','Whirlpool','Swimming pool','Washing machine', 'On a private path','In a courtyard','By a body of water','By a pond','By a river','On a field','In the woods','Outdoor seating area','Fireplace','Garden','Playground','Basic supplies available to purchase','Battery charging station']
-    // }
+  //!======================================================
+    maxCapacity: {
+      type: Number,
+      required: true
+    },  
+    amenities: {
+      type: Array,
+      default: []
+    },
+    essentialAmenities: {
+      type: Array,
+      default: []
+    },
+    title: { 
+      type: String,
+      required: true,
+      unique: true 
+    },
+    description: { 
+      type: String,
+      required: true
+    },
+    regionalDescription: {
+      type: String,
+      required: true
+    },
+    houseRules: {
+      type: String,
+      required: true
+    },
+    price: {
+      type: Number,
+      required:true
+    },
+    cancellation: {
+      type: String,
+      required: true
+    },
+    bookings: {
+        type: [mongoose.SchemaTypes.ObjectId],
+        ref: 'Booking'
+    },
     //TODO Add reviews when we reach that feature
   },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 // Geocode & create location
