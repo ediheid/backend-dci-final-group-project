@@ -3,64 +3,81 @@ import { geocoder } from "../../middleware/geocoder.js";
 
 const locationSchema = new mongoose.Schema(
   {
+    host: {
+      type: [mongoose.SchemaTypes.ObjectId],
+      ref: 'User'
+    },
+    propertyType: {
+      type: Array,
+      // enum : ['Field','Forest', 'Lake', 'River'],
+      default: []
+    },
+    spaceType: {
+      type: String,
+      required: true
+    },
+  //!ADDRESS ===============================================
+    address: {
+      type: String,
+      required: [true, 'Please add an address']
+    },
+    location: {
+      type: {
+        type: String,
+        enum: ['Point']
+      },
+      coordinates: {
+        type: [Number],
+        index: '2dsphere'
+      },
+      formattedAddress: String
+    },
+    id: String,
+  //!======================================================
+    maxCapacity: {
+      type: Number,
+      required: true
+    },  
+    amenities: {
+      type: Array,
+      default: []
+    },
+    essentialAmenities: {
+      type: Array,
+      default: []
+    },
     title: { 
       type: String,
       required: true,
       unique: true 
-  },
-  // description: { 
-  //     type: String,
-  //     required: true
-  // },
-  // price: {
-  //     type: Number,
-  //     required:true
-  // },
-  // propertyType: {
-  //     type: String,
-  //     enum : ['Field','Forest', 'Lake', 'River'],
-  //     default: ''
-  // },
-  spaceType: {
-    type: String,
-    // enum: ['An entire property','An shared property']
-    default: ''
-  },
-  host: {
-    type: String, 
-    // required: true, 
-  },
-  address: {
-    type: String,
-    required: [true, 'Please add an address']
-  },
-  location: {
-    type: {
+    },
+    description: { 
       type: String,
-      enum: ['Point']
+      required: true
     },
-    coordinates: {
-      type: [Number],
-      index: '2dsphere'
+    regionalDescription: {
+      type: String,
+      required: true
     },
-    formattedAddress: String
+    houseRules: {
+      type: String,
+      required: true
+    },
+    price: {
+      type: Number,
+      required:true
+    },
+    cancellation: {
+      type: String,
+      required: true
+    },
+    bookings: {
+        type: [mongoose.SchemaTypes.ObjectId],
+        ref: 'Booking'
+    },
+    //TODO Add reviews when we reach that feature
   },
-  id: String
-  // bookings: {
-  //     type: [mongoose.SchemaTypes.ObjectId],
-  //     ref: 'Booking'
-  // },
-  // maxCapacity: {
-  //     type: Number,
-  //     required: true
-  // },
-  // amenities: {
-  //     type: String,
-  //     enum: ['Equipment','Barrier-free','Toilet','Electricity','Water connection','Shower','Animals allowed','Grey water disposal','Daily waste disposal','Sink','WLAN','Sauna','Whirlpool','Swimming pool','Washing machine','Surroundings','On a Wieder','On the edge of a field','On the edge of a forest','On a private path','In a courtyard','By a body of water','By a pond','By a river','In a field','In a wood','At a lake','Extras','Seating','Fireplace','Garden','Playground','Farm shop','Battery charging station']
-  // }
-  //TODO Add reviews when we reach that feature
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 // Geocode & create location

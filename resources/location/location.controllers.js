@@ -110,18 +110,21 @@ export const createLocation = async (req,res) => {
     //TODO
     // what fields cant be duplicate?
       try {
-        const requestLocation = {
-          name: req.body.name,
-          address: req.body.address,
-          id: req.file.filename.split(".")[0]
-        }
-        const location = await Location.create(requestLocation);
+        console.log(req.body)
+
+        
+        // const requestLocation = {
+        //   name: req.body.name,
+        //   address: req.body.address,
+        //   id: req.file.filename.split(".")[0]
+        // }
+        // const location = await Location.create(requestLocation);
     
 
-        return res.status(201).json({
-          success: true,
-          data: location
-        });
+        // return res.status(201).json({
+        //   success: true,
+        //   data: location
+        // });
       } catch (err) {
         console.error(err);
         if (err.code === 11000) {
