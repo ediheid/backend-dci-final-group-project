@@ -30,7 +30,15 @@ const locationSchema = new mongoose.Schema(
         type: [Number],
         index: '2dsphere'
       },
-      formattedAddress: String
+      formattedAddress: String,
+      streetNumber: Number,
+      streetName: String,
+      city: String,
+      zipcode: Number,
+      region: String,
+      regionCode: String,
+      country: String,
+      countryCode: String
     },
     id: String,
   //!======================================================
@@ -88,6 +96,14 @@ locationSchema.pre("save", async function (next) {
     type: "Point",
     coordinates: [loc[0].longitude, loc[0].latitude],
     formattedAddress: loc[0].formattedAddress,
+    streetNumber: loc[0].streetNumber,
+    streetName: loc[0].streetName,
+    city: loc[0].city,
+		zipcode: loc[0].zipcode,
+		region: loc[0].administrativeLevels.level1long,
+		regionCode: loc[0].administrativeLevels.level1short,
+    country: loc[0].country,
+    countryCode: loc[0].countryCode
   };
 
   // Do not save address
