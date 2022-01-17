@@ -34,18 +34,18 @@ export const findManyLocations = async (req,res) => {
     try {
       let query = Object.values(req.body)
 
-      let locations, closestLocation, locationByName
+      let locations, closestLocation
 
       if (query.length === 0) {
-        locations = await Location.find({"formattedAddress": "Schwarzbald"})
+        locations = await Location.find({"formattedAddress": "Schwarzwald"})
         console.log(locations)
       } else {
         query = Object.values(req.body)[0]
-        locationByName = await Location.find({name: {$regex: query}})
+        locations = await Location.find({name: {$regex: query}})
         console.log(locations)
 
-        if (locationByName.length !== 0) {
-          query = locationByName[0].location.formattedAddress
+        if (locations.length !== 0) {
+          query = locations[0].location.formattedAddress
         }
 
         
