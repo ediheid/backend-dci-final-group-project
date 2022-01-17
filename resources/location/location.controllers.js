@@ -113,18 +113,33 @@ export const createLocation = async (req,res) => {
         console.log(req.body)
 
         
-        // const requestLocation = {
-        //   name: req.body.name,
-        //   address: req.body.address,
-        //   id: req.file.filename.split(".")[0]
-        // }
-        // const location = await Location.create(requestLocation);
-    
+        const requestLocation = {
+          propertyType: req.body.propertyType,
+          spaceType: req.body.spaceType,
+          address: req.body.address,
+          maxCapacity: req.body.maxCapacity,
+          amenities: req.body.amenities,
+          essentialAmenities: req.body.essentialAmenities,
+          title: req.body.title,
+          description: req.body.description,
+          regionalDescription: req.body.regionalDescription,
+          houseRules: req.body.houseRules,
+          price: req.body.price,
+          cancellation: req.body.cancellation,
+          // id: req.file.filename.split(".")[0]
+        }
+        
+        const location = await Location.create(requestLocation);
 
-        // return res.status(201).json({
-        //   success: true,
-        //   data: location
-        // });
+        // await location.save();
+    
+        console.log(requestLocation)
+
+        const response = {
+          created: true
+        }
+
+        return res.status(201).json(response);
       } catch (err) {
         console.error(err);
         if (err.code === 11000) {
