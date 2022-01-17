@@ -101,7 +101,7 @@ export const findLocation = async (req,res) => {
     //find by address?
     try {
       const location = await Location.findOne({_id: req.params.id})
-      // .select("title formattedAddress ") 
+      // .select("title formattedAddress property") 
 
       if (!location) return next(createError.NotFound());
 
