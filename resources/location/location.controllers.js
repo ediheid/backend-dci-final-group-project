@@ -1,6 +1,7 @@
 import { Location } from './location.model.js'
 import { geocoder } from '../../middleware/geocoder.js'
 import GreatCircle from 'great-circle'
+import { response } from 'express'
 
 export const confirmLocation = async (req,res) => {
   try {
@@ -99,7 +100,13 @@ export const findLocation = async (req,res) => {
     //TODO
     //find by address?
     try {
-      const location = await User.findOne({  }) // TODO what parameters
+      const location = await Location.findOne({_id: req.params.id})
+      // .select("title formattedAddress ") 
+
+      if (!location) return next(createError.NotFound());
+
+    
+      res.status(200).json(location)
     } catch (e) {
       console.error(e)
       res.status(400).end() // TODO create error
