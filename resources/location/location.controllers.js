@@ -29,21 +29,23 @@ export const confirmLocation = async (req,res) => {
     res.status(400).end() // TODO create error
   }
 }
-//TODO Change All to Many
+
 export const findManyLocations = async (req,res) => {
 
     try {
-      let query = Object.values(req.body)
+      console.log("req body find many",req.body)
+      // let query = Object.values(req.body.locationSearchName)
+      let query = req.body.locationSearchName
+      console.log("query",typeof query) // string
 
       let locations, closestLocation
 
-      if (query.length === 0) {
+      if (query === "") {
         locations = await Location.find({"formattedAddress": "Schwarzwald"})
         console.log(locations)
       } else {
-        query = Object.values(req.body)[0]
-        locations = await Location.find({name: {$regex: query}})
-        console.log(locations)
+        locations = await Location.find({title: {$regex: query}})
+        
 
         if (locations.length !== 0) {
           query = locations[0].location.formattedAddress
@@ -77,18 +79,23 @@ export const findManyLocations = async (req,res) => {
     const returnedLocations = locations.map(item => {
         let location = {
           id: item.id,
-          title: item.name,
+          title: item.title,
           type: "point",
-          address: item.location.formattedAddress,
-          coordinates: item.location.coordinates          
-          // img: item.propertyType,
-          // link: item.bookings
+          coordinates: item.location.coordinates,
+          city: item.location.city,
+          country: item.location.country,
+          pricePerNight: item.pricePerNight,
+          description: item.description         
         }
         return location;
       }
       )
 
-      res.send({returnedLocations,closestLocation})
+      const returnedClosestLocation = {
+        coordinates: closestLocation.location.coordinates
+      }
+
+      res.send({returnedLocations,returnedClosestLocation})
 
     } catch (e) {
       console.error(e)
@@ -118,23 +125,24 @@ export const createLocation = async (req,res) => {
     //TODO
     // what fields cant be duplicate?
       try {
-        console.log(req.body)
+        const parsedBody = JSON.parse(req.body.locationData)
 
+        console.log(req.file)
         
         const requestLocation = {
-          propertyType: req.body.propertyType,
-          spaceType: req.body.spaceType,
-          address: req.body.address,
-          maxCapacity: req.body.maxCapacity,
-          amenities: req.body.amenities,
-          essentialAmenities: req.body.essentialAmenities,
-          title: req.body.title,
-          description: req.body.description,
-          regionalDescription: req.body.regionalDescription,
-          houseRules: req.body.houseRules,
-          price: req.body.price,
-          cancellation: req.body.cancellation,
-          // id: req.file.filename.split(".")[0]
+          propertyType: parsedBody.propertyType,
+          spaceType: parsedBody.spaceType,
+          address: parsedBody.address,
+          maxCapacity: parsedBody.maxCapacity,
+          amenities: parsedBody.amenities,
+          essentialAmenities: parsedBody.essentialAmenities,
+          title: parsedBody.title,
+          description: parsedBody.description,
+          regionalDescription: parsedBody.regionalDescription,
+          houseRules: parsedBody.houseRules,
+          price: parsedBody.price,
+          cancellation: parsedBody.cancellation,
+          id: req.file.filename.split(".")[0]
         }
         
         const location = await Location.create(requestLocation);
@@ -151,7 +159,7 @@ export const createLocation = async (req,res) => {
       } catch (err) {
         console.error(err);
         if (err.code === 11000) {
-          return res.status(400).json({ error: 'This store already exists' });
+          return res.status(400).json({ error: 'This location already exists' });
         }
         res.status(500).json({ error: 'Server error' });
       }
