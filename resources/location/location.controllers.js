@@ -106,6 +106,7 @@ export const findLocation = async (req,res) => {
       if (!location) return next(createError.NotFound());
 
     
+      console.log("SPECIFICLOC", location)
       res.status(200).json(location)
     } catch (e) {
       console.error(e)
