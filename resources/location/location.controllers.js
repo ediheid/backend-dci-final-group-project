@@ -90,6 +90,7 @@ export const findManyLocations = async (req, res) => {
       let location = {
         _id: item._id,
         id: item.id,
+        img: item.img,
         title: item.title,
         type: "point",
         coordinates: item.location.coordinates,
@@ -151,6 +152,7 @@ export const createLocation = async (req, res) => {
       price: parsedBody.price,
       cancellation: parsedBody.cancellation,
       img: req.file.filename,
+      id: req.file.filename.split(".")[0],
     };
 
     const location = await Location.create(requestLocation);
