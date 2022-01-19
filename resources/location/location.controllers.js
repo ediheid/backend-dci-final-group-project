@@ -88,6 +88,7 @@ export const findManyLocations = async (req, res) => {
 
     const returnedLocations = locations.map((item) => {
       let location = {
+        _id: item._id,
         id: item.id,
         title: item.title,
         type: "point",
