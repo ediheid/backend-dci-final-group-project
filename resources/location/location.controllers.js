@@ -89,7 +89,7 @@ export const findManyLocations = async (req, res) => {
     const returnedLocations = locations.map((item) => {
       let location = {
         _id: item._id,
-        id: item.id,
+        img: item.img,
         title: item.title,
         type: "point",
         coordinates: item.location.coordinates,
@@ -150,7 +150,7 @@ export const createLocation = async (req, res) => {
       houseRules: parsedBody.houseRules,
       price: parsedBody.price,
       cancellation: parsedBody.cancellation,
-      id: req.file.filename.split(".")[0],
+      img: req.file.filename,
     };
 
     const location = await Location.create(requestLocation);

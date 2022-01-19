@@ -5,30 +5,30 @@ const locationSchema = new mongoose.Schema(
   {
     host: {
       type: [mongoose.SchemaTypes.ObjectId],
-      ref: 'User'
+      ref: "User",
     },
     propertyType: {
       type: Array,
       // enum : ['Field','Forest', 'Lake', 'River'],
-      default: []
+      default: [],
     },
     spaceType: {
       type: String,
-      required: true
+      required: true,
     },
-  //!ADDRESS ===============================================
+    //!ADDRESS ===============================================
     address: {
       type: String,
-      required: [true, 'Please add an address']
+      required: [true, "Please add an address"],
     },
     location: {
       type: {
         type: String,
-        enum: ['Point']
+        enum: ["Point"],
       },
       coordinates: {
         type: [Number],
-        index: '2dsphere'
+        index: "2dsphere",
       },
       formattedAddress: String,
       streetNumber: Number,
@@ -38,54 +38,54 @@ const locationSchema = new mongoose.Schema(
       region: String,
       regionCode: String,
       country: String,
-      countryCode: String
+      countryCode: String,
     },
-    id: String,
-  //!======================================================
+    img: String,
+    //!======================================================
     maxCapacity: {
       type: Number,
-      required: true
-    },  
+      required: true,
+    },
     amenities: {
       type: Array,
-      default: []
+      default: [],
     },
     essentialAmenities: {
       type: Array,
-      default: []
+      default: [],
     },
-    title: { 
+    title: {
       type: String,
       required: true,
-      unique: true 
+      unique: true,
     },
-    description: { 
+    description: {
       type: String,
-      required: true
+      required: true,
     },
     regionalDescription: {
       type: String,
-      required: true
+      required: true,
     },
     houseRules: {
       type: String,
-      required: true
+      required: true,
     },
     price: {
       type: Number,
-      required:true
+      required: true,
     },
     cancellation: {
       type: String,
-      required: true
+      required: true,
     },
     bookings: {
-        type: [mongoose.SchemaTypes.ObjectId],
-        ref: 'Booking'
+      type: [mongoose.SchemaTypes.ObjectId],
+      ref: "Booking",
     },
     //TODO Add reviews when we reach that feature
   },
-    { timestamps: true }
+  { timestamps: true }
 );
 
 // Geocode & create location
@@ -99,11 +99,11 @@ locationSchema.pre("save", async function (next) {
     streetNumber: loc[0].streetNumber,
     streetName: loc[0].streetName,
     city: loc[0].city,
-		zipcode: loc[0].zipcode,
-		region: loc[0].administrativeLevels.level1long,
-		regionCode: loc[0].administrativeLevels.level1short,
+    zipcode: loc[0].zipcode,
+    region: loc[0].administrativeLevels.level1long,
+    regionCode: loc[0].administrativeLevels.level1short,
     country: loc[0].country,
-    countryCode: loc[0].countryCode
+    countryCode: loc[0].countryCode,
   };
 
   // Do not save address
