@@ -150,7 +150,7 @@ export const createLocation = async (req, res) => {
       houseRules: parsedBody.houseRules,
       price: parsedBody.price,
       cancellation: parsedBody.cancellation,
-      id: req.file.filename.split(".")[0],
+      img: req.file.filename,
     };
 
     const location = await Location.create(requestLocation);
