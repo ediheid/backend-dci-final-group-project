@@ -40,7 +40,7 @@ const locationSchema = new mongoose.Schema(
       country: String,
       countryCode: String
     },
-    id: String,
+    img: String,
   //!======================================================
     maxCapacity: {
       type: Number,
