@@ -38,7 +38,9 @@ export const findManyLocations = async (req, res) => {
     console.log("query", typeof query); // string
 
     let locations;
-    let closestLocation = { lat: 51.1657, lng: 10.4515 }
+    let closestLocation = {
+      location: { coordinates: { lat: 51.1657, lng: 10.4515 } },
+    };
 
     if (query === "") {
       locations = await Location.find({ formattedAddress: "Schwarzwald" });
@@ -104,8 +106,8 @@ export const findManyLocations = async (req, res) => {
     });
 
     const returnedClosestLocation = {
-      coordinates: closestLocation.location.coordinates
-    }
+      coordinates: closestLocation.location.coordinates,
+    };
 
     res.send({ returnedLocations, returnedClosestLocation });
   } catch (e) {
