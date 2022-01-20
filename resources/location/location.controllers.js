@@ -130,6 +130,16 @@ export const findLocation = async (req, res) => {
   }
 };
 
+export const getLocationCards = async (req, res) => {
+  console.log(req.body)
+
+  const locations = await Location.find({}).limit(20);
+
+  console.log(locations)
+
+
+}
+
 export const createLocation = async (req, res) => {
   //TODO
   // what fields cant be duplicate?
@@ -139,6 +149,8 @@ export const createLocation = async (req, res) => {
     console.log(req.file);
 
     const requestLocation = {
+      host: parsedBody.host,
+      userId: parsedBody.userId,
       propertyType: parsedBody.propertyType,
       spaceType: parsedBody.spaceType,
       address: parsedBody.address,
