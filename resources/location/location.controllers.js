@@ -37,10 +37,7 @@ export const findManyLocations = async (req, res) => {
     let query = "";
     console.log("query", typeof query); // string
 
-    let locations;
-    let closestLocation = {
-      location: { coordinates: { lat: 51.1657, lng: 10.4515 } },
-    };
+    let locations, closestLocation;
 
     if (query === "") {
       locations = await Location.find({ formattedAddress: "Schwarzwald" });
@@ -99,17 +96,17 @@ export const findManyLocations = async (req, res) => {
         coordinates: item.location.coordinates,
         city: item.location.city,
         country: item.location.country,
-        pricePerNight: item.price,
+        pricePerNight: item.pricePerNight,
         description: item.description,
       };
       return location;
     });
 
-    const returnedClosestLocation = {
-      coordinates: closestLocation.location.coordinates,
-    };
+    // const returnedClosestLocation = {
+    //   coordinates: closestLocation.location.coordinates
+    // }
 
-    res.send({ returnedLocations, returnedClosestLocation });
+    res.send({ returnedLocations });
   } catch (e) {
     console.error(e);
     res.status(400).end(); // TODO create error
