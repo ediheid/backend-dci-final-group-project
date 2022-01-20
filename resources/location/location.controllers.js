@@ -96,7 +96,7 @@ export const findManyLocations = async (req, res) => {
         coordinates: item.location.coordinates,
         city: item.location.city,
         country: item.location.country,
-        pricePerNight: item.pricePerNight,
+        pricePerNight: item.price,
         description: item.description,
       };
       return location;
