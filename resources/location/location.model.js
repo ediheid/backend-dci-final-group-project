@@ -4,8 +4,10 @@ import { geocoder } from "../../middleware/geocoder.js";
 const locationSchema = new mongoose.Schema(
   {
     host: {
-      type: [mongoose.SchemaTypes.ObjectId],
-      ref: "User",
+      type: String
+    },
+    userId: {
+      type: String,
     },
     propertyType: {
       type: Array,
@@ -79,6 +81,10 @@ const locationSchema = new mongoose.Schema(
     cancellation: {
       type: String,
       required: true,
+    },
+    checkin: {
+      type: String,
+      required: true
     },
     bookings: {
       type: [mongoose.SchemaTypes.ObjectId],
