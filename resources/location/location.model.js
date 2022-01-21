@@ -82,6 +82,10 @@ const locationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    checkin: {
+      type: String,
+      required: true
+    },
     bookings: {
       type: [mongoose.SchemaTypes.ObjectId],
       ref: "Booking",
