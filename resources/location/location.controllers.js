@@ -113,7 +113,7 @@ export const findManyLocations = async (req, res) => {
   }
 };
 
-export const findLocation = async (req, res) => {
+export const findLocation = async (req, res, next) => {
   //TODO
   //find by address?
   try {
@@ -130,14 +130,20 @@ export const findLocation = async (req, res) => {
   }
 };
 
-export const getLocationCards = async (req, res) => {
-  console.log(req.body)
+export const getLocationCards = async (req, res, next) => {
+  console.log("Test")
+try {
+  const locations = await Location.find().sort({ createdAt: -1 }).limit(6);
 
-  const locations = await Location.find({}).limit(20);
+  if (!locations) return next(createError.NotFound());
 
+  // console.log("SPECIFICLOC", locations);
+  res.status(200).json(locations);
   console.log(locations)
-
-
+} catch (e) {
+  console.error(e);
+  res.status(400).end(); // TODO create error
+}
 }
 
 export const createLocation = async (req, res) => {
