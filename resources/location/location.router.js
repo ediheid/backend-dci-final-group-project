@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { findManyLocations, findLocation, createLocation, updateLocation, deleteLocation, confirmLocation, getLocationCards } from './location.controllers.js'
+import { findManyLocations, findLocation, createLocation, updateLocation, deleteLocation, confirmLocation, getLocationCards, findAllLocations } from './location.controllers.js'
 import upload from '../../middleware/upload.js'
 
 const router = Router()
@@ -7,6 +7,7 @@ const router = Router()
 router.post('/', upload, createLocation)
 
 router.post('/find', findManyLocations)
+router.post('/findall', findAllLocations)
 
 router.get('/confirm', confirmLocation)
 

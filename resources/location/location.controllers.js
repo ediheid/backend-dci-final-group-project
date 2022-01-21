@@ -29,18 +29,55 @@ export const confirmLocation = async (req, res) => {
   }
 };
 
+export const findAllLocations = async (req, res) => {
+  try {
+    // let query = "";
+    
+    const closestLocation = {
+      location: { coordinates: { lat: 51.1657, lng: 10.4515 } },
+    };
+
+    const locations = await Location.find({ });
+
+    const returnedLocations = locations.map((item) => {
+      let location = {
+        _id: item._id,
+        id: item.id,
+        img: item.img,
+        title: item.title,
+        type: "point",
+        coordinates: item.location.coordinates,
+        city: item.location.city,
+        country: item.location.country,
+        pricePerNight: item.price,
+        description: item.description,
+      };
+      return location;
+    });
+
+    const returnedClosestLocation = {
+      coordinates: closestLocation.location.coordinates,
+    };
+
+    res.send({ returnedLocations, returnedClosestLocation });
+  } catch (e) {
+    console.error(e);
+    res.status(400).end(); // TODO create error
+  }
+};
+
 export const findManyLocations = async (req, res) => {
   try {
     console.log("req body find many", req.body);
     // let query = Object.values(req.body.locationSearchName)
-    // let query = req.body.locationSearchName;
-    let query = "";
+    let query = req.body.locationSearchName;
+    // let query = "";
     console.log("query", typeof query); // string
 
     let locations, closestLocation;
 
     if (query === "") {
-      locations = await Location.find({ formattedAddress: "Schwarzwald" });
+      locations = await Location.find({ });
       console.log(locations);
     } else {
       locations = await Location.find({ title: { $regex: query } });
