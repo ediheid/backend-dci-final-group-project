@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import user from "./resources/user/user.router.js";
 import location from "./resources/location/location.router.js";
+import picture from "./resources/picture/picture.router.js"
 import morgan from "morgan";
 import { globalErrorHandler } from "./middleware/globalErrorHandler.js";
 
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", user);
 app.use("/location", location);
+app.use("/uploads", picture)
 app.use(globalErrorHandler);
 
 app.use(globalErrorHandler);
