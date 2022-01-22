@@ -29,21 +29,55 @@ export const confirmLocation = async (req, res) => {
   }
 };
 
+export const findAllLocations = async (req, res) => {
+  try {
+    // let query = "";
+    
+    const closestLocation = {
+      location: { coordinates: { lat: 51.1657, lng: 10.4515 } },
+    };
+
+    const locations = await Location.find({ });
+
+    const returnedLocations = locations.map((item) => {
+      let location = {
+        _id: item._id,
+        id: item.id,
+        img: item.img,
+        title: item.title,
+        type: "point",
+        coordinates: item.location.coordinates,
+        city: item.location.city,
+        country: item.location.country,
+        pricePerNight: item.price,
+        description: item.description,
+      };
+      return location;
+    });
+
+    const returnedClosestLocation = {
+      coordinates: closestLocation.location.coordinates,
+    };
+
+    res.send({ returnedLocations, returnedClosestLocation });
+  } catch (e) {
+    console.error(e);
+    res.status(400).end(); // TODO create error
+  }
+};
+
 export const findManyLocations = async (req, res) => {
   try {
     console.log("req body find many", req.body);
     // let query = Object.values(req.body.locationSearchName)
-    // let query = req.body.locationSearchName;
-    let query = "";
+    let query = req.body.locationSearchName;
+    // let query = "";
     console.log("query", typeof query); // string
 
-    let locations;
-    let closestLocation = {
-      location: { coordinates: { lat: 51.1657, lng: 10.4515 } },
-    };
+    let locations, closestLocation;
 
     if (query === "") {
-      locations = await Location.find({ formattedAddress: "Schwarzwald" });
+      locations = await Location.find({ });
       console.log(locations);
     } else {
       locations = await Location.find({ title: { $regex: query } });
@@ -99,24 +133,24 @@ export const findManyLocations = async (req, res) => {
         coordinates: item.location.coordinates,
         city: item.location.city,
         country: item.location.country,
-        pricePerNight: item.price,
+        pricePerNight: item.pricePerNight,
         description: item.description,
       };
       return location;
     });
 
-    const returnedClosestLocation = {
-      coordinates: closestLocation.location.coordinates,
-    };
+    // const returnedClosestLocation = {
+    //   coordinates: closestLocation.location.coordinates
+    // }
 
-    res.send({ returnedLocations, returnedClosestLocation });
+    res.send({ returnedLocations });
   } catch (e) {
     console.error(e);
     res.status(400).end(); // TODO create error
   }
 };
 
-export const findLocation = async (req, res) => {
+export const findLocation = async (req, res, next) => {
   //TODO
   //find by address?
   try {
@@ -133,6 +167,22 @@ export const findLocation = async (req, res) => {
   }
 };
 
+export const getLocationCards = async (req, res, next) => {
+  console.log("Test")
+try {
+  const locations = await Location.find().sort({ createdAt: -1 }).limit(6);
+
+  if (!locations) return next(createError.NotFound());
+
+  // console.log("SPECIFICLOC", locations);
+  res.status(200).json(locations);
+  console.log(locations)
+} catch (e) {
+  console.error(e);
+  res.status(400).end(); // TODO create error
+}
+}
+
 export const createLocation = async (req, res) => {
   //TODO
   // what fields cant be duplicate?
@@ -142,6 +192,8 @@ export const createLocation = async (req, res) => {
     console.log(req.file);
 
     const requestLocation = {
+      host: parsedBody.host,
+      userId: parsedBody.userId,
       propertyType: parsedBody.propertyType,
       spaceType: parsedBody.spaceType,
       address: parsedBody.address,
