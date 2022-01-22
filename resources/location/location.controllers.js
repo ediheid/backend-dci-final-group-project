@@ -32,12 +32,12 @@ export const confirmLocation = async (req, res) => {
 export const findAllLocations = async (req, res) => {
   try {
     // let query = "";
-    
+
     const closestLocation = {
       location: { coordinates: { lat: 51.1657, lng: 10.4515 } },
     };
 
-    const locations = await Location.find({ });
+    const locations = await Location.find({});
 
     const returnedLocations = locations.map((item) => {
       let location = {
@@ -77,7 +77,7 @@ export const findManyLocations = async (req, res) => {
     let locations, closestLocation;
 
     if (query === "") {
-      locations = await Location.find({ });
+      locations = await Location.find({});
       console.log(locations);
     } else {
       locations = await Location.find({ title: { $regex: query } });
@@ -133,7 +133,7 @@ export const findManyLocations = async (req, res) => {
         coordinates: item.location.coordinates,
         city: item.location.city,
         country: item.location.country,
-        pricePerNight: item.pricePerNight,
+        pricePerNight: item.price,
         description: item.description,
       };
       return location;
@@ -168,20 +168,20 @@ export const findLocation = async (req, res, next) => {
 };
 
 export const getLocationCards = async (req, res, next) => {
-  console.log("Test")
-try {
-  const locations = await Location.find().sort({ createdAt: -1 }).limit(6);
+  console.log("Test");
+  try {
+    const locations = await Location.find().sort({ createdAt: -1 }).limit(6);
 
-  if (!locations) return next(createError.NotFound());
+    if (!locations) return next(createError.NotFound());
 
-  // console.log("SPECIFICLOC", locations);
-  res.status(200).json(locations);
-  console.log(locations)
-} catch (e) {
-  console.error(e);
-  res.status(400).end(); // TODO create error
-}
-}
+    // console.log("SPECIFICLOC", locations);
+    res.status(200).json(locations);
+    console.log(locations);
+  } catch (e) {
+    console.error(e);
+    res.status(400).end(); // TODO create error
+  }
+};
 
 export const createLocation = async (req, res) => {
   //TODO
