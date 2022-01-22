@@ -1,7 +1,7 @@
 import { Location } from "./location.model.js";
+import { Picture } from "../picture/picture.model.js"
 import { geocoder } from "../../middleware/geocoder.js";
 import GreatCircle from "great-circle";
-import { response } from "express";
 
 export const confirmLocation = async (req, res) => {
   try {
@@ -184,12 +184,10 @@ export const getLocationCards = async (req, res, next) => {
 };
 
 export const createLocation = async (req, res) => {
-  //TODO
-  // what fields cant be duplicate?
   try {
     const parsedBody = JSON.parse(req.body.locationData);
 
-    console.log(req.file);
+    const img = await Picture.create({ buffer: req.file.buffer, mimetype: req.file.mimetype, encoding: req.file.encoding, originalname: req.file.originalname, fieldname: req.file.fieldname });
 
     const requestLocation = {
       host: parsedBody.host,
@@ -206,13 +204,11 @@ export const createLocation = async (req, res) => {
       houseRules: parsedBody.houseRules,
       price: parsedBody.price,
       cancellation: parsedBody.cancellation,
-      img: req.file.filename,
-      id: req.file.filename.split(".")[0],
+      img: img._id.toString(),
+      // id: req.file.filename.split(".")[0],
     };
 
     const location = await Location.create(requestLocation);
-
-    // await location.save();
 
     console.log(requestLocation);
 
