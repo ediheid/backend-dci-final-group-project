@@ -76,3 +76,33 @@ export const searchValidator = (props) => {
             .withMessage('Search should only include letters or spaces')
     ]
 }
+
+export const locationFormValidator = (props) => {
+    return [
+        check("address")
+            .notEmpty().trim()
+            .withMessage('Please insert a address.')
+            .matches(/^([a-zäöüß\s\d.,-]+?)\s*([\d\s]+(?:\s?[-|+/]\s?\d+)?\s*[a-z]?)?\s*(\d{5})\s*(.+)?$/i)
+            .withMessage('Please insert a real address in the following formate: "street streetNo. & city"'),
+        check("title")
+            .notEmpty().trim()
+            .withMessage('Please enter a descriptive title for your property')
+            .isLength({min: 20, max: 100})
+            .withMessage('Please enter a descriptive title that contains 20 - 100 characters.'),
+        check("description")
+            .notEmpty().trim()
+            .withMessage('Please enter a description of your property that provides your guests a good imagination of your offered property.')
+            .isLength({min: 800, max: 2000})
+            .withMessage('Your description should be between 800 - 2000 characters long.'),
+        check("regionalDescription")
+            .notEmpty().trim()
+            .withMessage('Please enter a description of the area in which your property is located.')
+            .isLength({min: 400, max: 2000})
+            .withMessage('The description of the local circumstances should be between 400 - 2000 characters long.'),
+        check("houseRules")
+            .notEmpty().trim()
+            .withMessage('Please enter important rules for checkin, checkout or general rules your guest have to fullfill.')
+            .isLength({min: 200, max: 2000})
+            .withMessage('The description of your property rules should be between 200 - 2000 characters long.'),
+    ]
+}

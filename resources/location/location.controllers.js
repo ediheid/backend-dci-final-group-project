@@ -2,6 +2,7 @@ import { Location } from "./location.model.js";
 import { geocoder } from "../../middleware/geocoder.js";
 import GreatCircle from "great-circle";
 import { response } from "express";
+import { validationResult } from "express-validator";
 
 export const confirmLocation = async (req, res) => {
   try {
@@ -184,9 +185,26 @@ try {
 }
 
 export const createLocation = async (req, res) => {
-  //TODO
-  // what fields cant be duplicate?
+  
   try {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const foundErrors = errors.array();
+
+      let message = [];
+
+      for (let e of foundErrors) {
+        message.push(e.msg)
+      }
+
+      // const finaleMessage = message.join(", \n")
+      console.log(message)
+      // const 
+
+      return res.status(400).json({ message: message })
+    } else {
     const parsedBody = JSON.parse(req.body.locationData);
 
     console.log(req.file);
@@ -221,6 +239,7 @@ export const createLocation = async (req, res) => {
     };
 
     return res.status(201).json(response);
+    }
   } catch (err) {
     console.error(err);
     if (err.code === 11000) {
