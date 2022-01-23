@@ -139,11 +139,11 @@ export const findManyLocations = async (req, res) => {
       return location;
     });
 
-    // const returnedClosestLocation = {
-    //   coordinates: closestLocation.location.coordinates
-    // }
+    const returnedClosestLocation = {
+      coordinates: closestLocation.location.coordinates
+    }
 
-    res.send({ returnedLocations });
+    res.send({ returnedLocations, returnedClosestLocation });
   } catch (e) {
     console.error(e);
     res.status(400).end(); // TODO create error
