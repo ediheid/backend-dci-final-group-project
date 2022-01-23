@@ -2,6 +2,7 @@ import { Location } from "./location.model.js";
 import { Picture } from "../picture/picture.model.js";
 import { geocoder } from "../../middleware/geocoder.js";
 import GreatCircle from "great-circle";
+import { validationResult } from "express-validator";
 
 export const confirmLocation = async (req, res) => {
   try {
@@ -185,7 +186,17 @@ export const getLocationCards = async (req, res, next) => {
 
 export const createLocation = async (req, res) => {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    } 
+
     const parsedBody = JSON.parse(req.body.locationData);
+
+    if (!req.file.mimetype.includes("image")) {
+      return res.status(400).json({ error: "This is not an image" });
+    }
 
     const img = await Picture.create({
       buffer: req.file.buffer,

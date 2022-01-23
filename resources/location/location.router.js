@@ -1,10 +1,11 @@
 import { Router } from 'express'
 import { findManyLocations, findLocation, createLocation, updateLocation, deleteLocation, confirmLocation, getLocationCards, findAllLocations } from './location.controllers.js'
 import upload from '../../middleware/upload.js'
+import { locationFormValidator } from '../../middleware/validators.js'
 
 const router = Router()
 
-router.post('/', upload, createLocation)
+router.post('/', [upload, locationFormValidator() ], createLocation);
 
 router.post('/find', findManyLocations)
 router.post('/findall', findAllLocations)
