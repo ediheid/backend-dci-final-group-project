@@ -8,14 +8,14 @@ export const registerValidator = (props) => {
             .isEmail().normalizeEmail()
             .withMessage('Should be a valid email')
             .isLength({max:50})
-            .withMessage('Email should not be longer than 50 charachters'),
+            .withMessage('Email should not be longer than 50 characters'),
         check("firstname")
             .notEmpty().trim()
             .withMessage('First name is required')
             .isAlpha()
             .withMessage('First name should only include letters or spaces')
             .isLength({max:30})
-            .withMessage('First name should not be longer than 30 charachters'),
+            .withMessage('First name should not be longer than 30 characters'),
         check("lastname")
             .notEmpty().trim()
             .withMessage('Last name is required')
@@ -79,12 +79,12 @@ export const searchValidator = (props) => {
 
 export const locationFormValidator = (props) => {
     return [
-        check("address")
+        check("locationData.address")
             .notEmpty().trim()
             .withMessage('Please insert a address.')
             .matches(/^([a-zäöüß\s\d.,-]+?)\s*([\d\s]+(?:\s?[-|+/]\s?\d+)?\s*[a-z]?)?\s*(\d{5})\s*(.+)?$/i)
             .withMessage('Please insert a real address in the following formate: "street streetNo. & city"'),
-        check("title")
+        check("locationData.title")
             .notEmpty().trim()
             .withMessage('Please enter a descriptive title for your property')
             .isLength({min: 20, max: 100})
