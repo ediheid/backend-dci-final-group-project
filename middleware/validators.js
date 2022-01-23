@@ -1,4 +1,4 @@
-import { check } from 'express-validator'
+import { check, body } from 'express-validator'
 
 export const registerValidator = (props) => {
     return [
@@ -74,5 +74,73 @@ export const searchValidator = (props) => {
             .withMessage('Search should be not longer as 50 characters')
             .isAlpha({ignore:'\s-\'.'}) //TODO test if the space, period, hyphen and apostrophe are accepted
             .withMessage('Search should only include letters or spaces')
+    ]
+}
+
+export const locationFormValidator = (props) => {
+    return [
+        body().custom(value => {
+            const parsedBody = JSON.parse(value.locationData);
+            if (parsedBody.address.length === 0) {
+                throw new Error('Please insert a address.');
+            }
+            return true
+          }),
+        body().custom(value => {
+            const parsedBody = JSON.parse(value.locationData);
+            if (parsedBody.title.length === 0) {
+                throw new Error('Please enter a descriptive title for your property');
+            }
+            return true
+          }),
+          body().custom(value => {
+            const parsedBody = JSON.parse(value.locationData);
+            if (!parsedBody.title.match(/^.{20,100}$/)) {
+                throw new Error('Please enter a descriptive title that contains 20 - 100 characters.');
+            }
+            return true
+          }),
+        body().custom(value => {
+            const parsedBody = JSON.parse(value.locationData);
+            if (parsedBody.description.length === 0) {
+                throw new Error('Please enter a description of your property that provides your guests a good imagination of your offered property');
+            }
+            return true
+          }),
+          body().custom(value => {
+            const parsedBody = JSON.parse(value.locationData);
+            if (!parsedBody.description.match(/^.{800,2000}$/)) {
+                throw new Error('Your description should be between 800 - 2000 characters long.');
+            }
+            return true
+          }),
+          body().custom(value => {
+            const parsedBody = JSON.parse(value.locationData);
+            if (parsedBody.regionalDescription.length === 0) {
+                throw new Error('Please enter a description of the area in which your property is located.');
+            }
+            return true
+          }),
+          body().custom(value => {
+            const parsedBody = JSON.parse(value.locationData);
+            if (!parsedBody.regionalDescription.match(/^.{400,2000}$/)) {
+                throw new Error('The description of the local circumstances should be between 400 - 2000 characters long.');
+            }
+            return true
+          }),
+          body().custom(value => {
+            const parsedBody = JSON.parse(value.locationData);
+            if (parsedBody.houseRules.length === 0) {
+                throw new Error('Please enter important rules for checkin, checkout or general rules your guest have to fullfill.');
+            }
+            return true
+          }),
+          body().custom(value => {
+            const parsedBody = JSON.parse(value.locationData);
+            if (!parsedBody.houseRules.match(/^.{200,2000}$/)) {
+                throw new Error('The description of your property rules should be between 200 - 2000 characters long.');
+            }
+            return true
+          })
     ]
 }
