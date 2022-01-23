@@ -1,5 +1,5 @@
 import { Location } from "./location.model.js";
-import { Picture } from "../picture/picture.model.js"
+import { Picture } from "../picture/picture.model.js";
 import { geocoder } from "../../middleware/geocoder.js";
 import GreatCircle from "great-circle";
 
@@ -140,8 +140,8 @@ export const findManyLocations = async (req, res) => {
     });
 
     const returnedClosestLocation = {
-      coordinates: closestLocation.location.coordinates
-    }
+      coordinates: closestLocation.location.coordinates,
+    };
 
     res.send({ returnedLocations, returnedClosestLocation });
   } catch (e) {
@@ -187,7 +187,13 @@ export const createLocation = async (req, res) => {
   try {
     const parsedBody = JSON.parse(req.body.locationData);
 
-    const img = await Picture.create({ buffer: req.file.buffer, mimetype: req.file.mimetype, encoding: req.file.encoding, originalname: req.file.originalname, fieldname: req.file.fieldname });
+    const img = await Picture.create({
+      buffer: req.file.buffer,
+      mimetype: req.file.mimetype,
+      encoding: req.file.encoding,
+      originalname: req.file.originalname,
+      fieldname: req.file.fieldname,
+    });
 
     const requestLocation = {
       host: parsedBody.host,
@@ -205,7 +211,8 @@ export const createLocation = async (req, res) => {
       price: parsedBody.price,
       cancellation: parsedBody.cancellation,
       img: img._id.toString(),
-      // id: req.file.filename.split(".")[0],
+      checkin: parsedBody.checkin,
+      id: img._id.toString(),
     };
 
     const location = await Location.create(requestLocation);
