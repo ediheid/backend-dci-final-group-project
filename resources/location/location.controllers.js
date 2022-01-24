@@ -195,7 +195,7 @@ export const createLocation = async (req, res) => {
     const parsedBody = JSON.parse(req.body.locationData);
 
     if (!req.file.mimetype.includes("image")) {
-      return res.status(400).json({ error: "This is not an image" });
+      return res.status(400).json({ error: "Please check that you have selected an image" });
     }
 
     const img = await Picture.create({
