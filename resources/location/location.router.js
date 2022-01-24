@@ -5,7 +5,7 @@ import { locationFormValidator } from '../../middleware/validators.js'
 
 const router = Router()
 
-router.post('/', [upload, locationFormValidator() ], createLocation);
+router.post('/', [upload.single('locationImage'), locationFormValidator() ], createLocation);
 
 router.post('/find', findManyLocations)
 router.post('/findall', findAllLocations)
