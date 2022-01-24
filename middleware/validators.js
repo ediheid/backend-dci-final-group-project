@@ -95,7 +95,7 @@ export const locationFormValidator = (props) => {
           }),
           body().custom(value => {
             const parsedBody = JSON.parse(value.locationData);
-            if (!parsedBody.title.match(/^.{20,100}$/)) {
+            if (parsedBody.title.length < 20 || parsedBody.title.length > 100) {
                 throw new Error('Please enter a descriptive title that contains 20 - 100 characters.');
             }
             return true
@@ -109,7 +109,7 @@ export const locationFormValidator = (props) => {
           }),
           body().custom(value => {
             const parsedBody = JSON.parse(value.locationData);
-            if (!parsedBody.description.match(/^.{800,2000}$/)) {
+            if (parsedBody.description.length < 800 || parsedBody.description.length > 2000) {
                 throw new Error('Your description should be between 800 - 2000 characters long.');
             }
             return true
@@ -123,7 +123,7 @@ export const locationFormValidator = (props) => {
           }),
           body().custom(value => {
             const parsedBody = JSON.parse(value.locationData);
-            if (!parsedBody.regionalDescription.match(/^.{400,2000}$/)) {
+            if (parsedBody.regionalDescription.length < 400 || parsedBody.regionalDescription.length > 2000) {
                 throw new Error('The description of the local circumstances should be between 400 - 2000 characters long.');
             }
             return true
@@ -137,7 +137,7 @@ export const locationFormValidator = (props) => {
           }),
           body().custom(value => {
             const parsedBody = JSON.parse(value.locationData);
-            if (!parsedBody.houseRules.match(/^.{200,2000}$/)) {
+            if (parsedBody.houseRules.length < 200 || parsedBody.houseRules.length > 2000) {
                 throw new Error('The description of your property rules should be between 200 - 2000 characters long.');
             }
             return true
