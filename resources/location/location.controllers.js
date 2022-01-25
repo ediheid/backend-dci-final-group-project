@@ -171,7 +171,8 @@ export const findLocation = async (req, res, next) => {
 export const getLocationCards = async (req, res, next) => {
   console.log("Test");
   try {
-    const locations = await Location.find().sort({ createdAt: -1 }).limit(6);
+    // const locations = await Location.find().sort({ createdAt: -1 }).limit(6);
+    const locations = await Location.aggregate([{$sample: { size: 8 }}]);
 
     if (!locations) return next(createError.NotFound());
 
