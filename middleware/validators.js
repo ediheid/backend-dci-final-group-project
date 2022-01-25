@@ -2,13 +2,6 @@ import { check, body } from 'express-validator'
 
 export const registerValidator = (props) => {
     return [
-        check("email")
-            .notEmpty().trim()
-            .withMessage('Email is required')
-            .isEmail().normalizeEmail()
-            .withMessage('Should be a valid email')
-            .isLength({max:50})
-            .withMessage('Email should not be longer than 50 characters'),
         check("firstname")
             .notEmpty().trim()
             .withMessage('First name is required')
@@ -23,6 +16,13 @@ export const registerValidator = (props) => {
             .withMessage('Last name should only include letters or spaces')
             .isLength({max:30})
             .withMessage('Last name should not be longer than 30 charachters'),
+        check("email")
+            .notEmpty().trim()
+            .withMessage('Email is required')
+            .isEmail().normalizeEmail()
+            .withMessage('Should be a valid email')
+            .isLength({max:50})
+            .withMessage('Email should not be longer than 50 characters'),
         check("password")
             .notEmpty().trim()
             .withMessage('Password is required')
@@ -51,17 +51,17 @@ export const loginValidator = (props) => {
         check("email")
             .notEmpty().trim()
             .withMessage('Email is required')
-            .isEmail().normalizeEmail()
-            .withMessage('Should be a valid email')
-            .isLength({max:50})
-            .withMessage('Email should not be longer than 50 charachters'),
+            .isEmail().normalizeEmail(),
+            // .withMessage('Should be a valid email')
+            // .isLength({max:50})
+            // .withMessage('Email should not be longer than 50 charachters'),
         check("password")
             .notEmpty().trim()
             .withMessage('Password is required')
-            .isLength({min:8, max:16})
-            .withMessage('Password should be between 8 to 16 characters')
-            .matches(/^(?=.*[A-Z])(?=.*[!@#$%^&*()\-__+.])(?=.*[0-9])(?=.*[a-z]).{8,}$/, "i")
-            .withMessage('Password should be combination of at least one uppercase, one lower case, one special character and one number'),
+            // .isLength({min:8, max:16})
+            // .withMessage('Password should be between 8 to 16 characters')
+            // .matches(/^(?=.*[A-Z])(?=.*[!@#$%^&*()\-__+.])(?=.*[0-9])(?=.*[a-z]).{8,}$/, "i")
+            // .withMessage('Password should be combination of at least one uppercase, one lower case, one special character and one number'),
     ]
 }
 

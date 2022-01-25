@@ -4,7 +4,7 @@ import { registerValidator, loginValidator} from '../../middleware/validators.js
 
 const router = express.Router();
 
-router.post("/", registerValidator(["email","firstname", "lastname", "password"]), createUser); 
+router.post("/", registerValidator(["email","firstname", "lastname", "password", "confirmedPassword"]), createUser); 
 router.post("/login", loginValidator(["email", "password"]), userLogin);
 router.get("/verify-email/:userId/:token", verifyUser)
 router.put('/:id', updateUser)

@@ -159,7 +159,7 @@ export const verifyUser = async (req, res, next) => {
       );
 
       // res.status(201).json({ message: "Your account has been successfully activated!" })
-    }
+  }
   } catch (e) {
     next(createErrors.InternalServerError());
   }
@@ -169,6 +169,12 @@ export const verifyUser = async (req, res, next) => {
 
 export const userLogin = async (req, res, next) => {
   try {
+    // Check if the validator detects some errors
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    } else {
     const existingUser = await User.findOne({ email: req.body.email });
 
     if (!existingUser) {
@@ -216,8 +222,11 @@ export const userLogin = async (req, res, next) => {
         // res.cookie("token", "testCookie");
         console.log("cookie send!", token);
         res.json(response);
+      } else {
+        return next(createErrors(403, "Wrong password!"));
       }
     }
+  }
   } catch (e) {
     next(createErrors.InternalServerError());
   }
