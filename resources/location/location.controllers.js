@@ -188,6 +188,7 @@ export const createLocation = async (req, res) => {
   try {
     const errors = validationResult(req);
 
+    console.log("ERR", errors)
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     } 
@@ -235,6 +236,7 @@ export const createLocation = async (req, res) => {
     };
 
     return res.status(201).json(response);
+    
   } catch (err) {
     console.error(err);
     if (err.code === 11000) {
