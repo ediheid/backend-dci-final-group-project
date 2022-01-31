@@ -172,7 +172,7 @@ export const getLocationCards = async (req, res, next) => {
   console.log("Test");
   try {
     // const locations = await Location.find().sort({ createdAt: -1 }).limit(6);
-    const locations = await Location.aggregate([{$sample: { size: 8 }}]);
+    const locations = await Location.aggregate([{ $sample: { size: 9 } }]);
 
     if (!locations) return next(createError.NotFound());
 
@@ -189,15 +189,17 @@ export const createLocation = async (req, res) => {
   try {
     const errors = validationResult(req);
 
-    console.log("ERR", errors)
+    console.log("ERR", errors);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
-    } 
+    }
 
     const parsedBody = JSON.parse(req.body.locationData);
 
     if (!req.file.mimetype.includes("image")) {
-      return res.status(400).json({ error: "Please check that you have selected an image" });
+      return res
+        .status(400)
+        .json({ error: "Please check that you have selected an image" });
     }
 
     const img = await Picture.create({
@@ -237,7 +239,6 @@ export const createLocation = async (req, res) => {
     };
 
     return res.status(201).json(response);
-    
   } catch (err) {
     console.error(err);
     if (err.code === 11000) {
